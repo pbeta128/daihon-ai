@@ -1,0 +1,376 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .app {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--color-background-tertiary);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .header {
+    background: var(--color-background-primary);
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: -0.5px;
+  }
+
+  .logo span {
+    color: #E24B4A;
+  }
+
+  .badge {
+    font-size: 10px;
+    background: var(--color-background-danger);
+    color: var(--color-text-danger);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  .main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .hero h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+
+  .hero p {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+  }
+
+  .card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .form-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-md);
+    font-size: 14px;
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--color-background-primary);
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
+    resize: none;
+    transition: border-color 0.15s;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--color-border-info);
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 1rem;
+  }
+
+  .option-btn {
+    padding: 8px 12px;
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-md);
+    background: var(--color-background-primary);
+    color: var(--color-text-secondary);
+    font-size: 13px;
+    font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+  }
+
+  .option-btn.active {
+    border-color: #E24B4A;
+    background: #FCEBEB;
+    color: #A32D2D;
+    font-weight: 500;
+  }
+
+  .generate-btn {
+    width: 100%;
+    padding: 13px;
+    background: #E24B4A;
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-md);
+    font-size: 15px;
+    font-weight: 500;
+    font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .generate-btn:hover { opacity: 0.85; }
+  .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .result-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    display: none;
+  }
+
+  .result-card.visible { display: block; }
+
+  .result-section {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+  }
+
+  .result-section:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .result-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .result-text {
+    font-size: 14px;
+    color: var(--color-text-primary);
+    line-height: 1.8;
+    white-space: pre-wrap;
+  }
+
+  .loading {
+    text-align: center;
+    padding: 2rem;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    display: none;
+  }
+
+  .loading.visible { display: block; }
+
+  .dot-anim::after {
+    content: '';
+    animation: dots 1.2s infinite;
+  }
+
+  @keyframes dots {
+    0% { content: ''; }
+    33% { content: '.'; }
+    66% { content: '..'; }
+    100% { content: '...'; }
+  }
+
+  .copy-btn {
+    margin-top: 8px;
+    padding: 6px 14px;
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-md);
+    background: var(--color-background-secondary);
+    color: var(--color-text-secondary);
+    font-size: 12px;
+    font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer;
+  }
+
+  .copy-btn:hover { background: var(--color-background-tertiary); }
+
+  .api-warning {
+    background: var(--color-background-warning);
+    border: 0.5px solid var(--color-border-warning);
+    border-radius: var(--border-radius-md);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--color-text-warning);
+    margin-bottom: 1rem;
+  }
+</style>
+
+<div class="app">
+  <div class="header">
+    <div class="logo">daihon<span>.ai</span></div>
+    <div class="badge">β版</div>
+  </div>
+
+  <div class="main">
+    <div class="hero">
+      <h1>AIがあなたの動画台本を<br>自動で作ります</h1>
+      <p>テーマを入力するだけで、プロ品質の台本を数秒で生成</p>
+    </div>
+
+    <div class="card">
+      <div class="api-warning">
+        ※ APIキーをコードに設定すると実際にAIが動きます。今はデモ表示です。
+      </div>
+
+      <label class="form-label">動画のテーマ・内容</label>
+      <textarea class="form-input" id="theme" rows="3" placeholder="例：初心者向けにPythonプログラミングの始め方を解説する動画"></textarea>
+
+      <label class="form-label">チャンネルのジャンル</label>
+      <div class="options-grid">
+        <button class="option-btn active" onclick="selectGenre(this, '教育・解説')">教育・解説</button>
+        <button class="option-btn" onclick="selectGenre(this, 'エンタメ・バラエティ')">エンタメ・バラエティ</button>
+        <button class="option-btn" onclick="selectGenre(this, 'Vlog・日常')">Vlog・日常</button>
+        <button class="option-btn" onclick="selectGenre(this, 'ビジネス・副業')">ビジネス・副業</button>
+        <button class="option-btn" onclick="selectGenre(this, 'ゲーム実況')">ゲーム実況</button>
+        <button class="option-btn" onclick="selectGenre(this, 'その他')">その他</button>
+      </div>
+
+      <label class="form-label">動画の長さ</label>
+      <div class="options-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+        <button class="option-btn active" onclick="selectLength(this, '5〜10分')">5〜10分</button>
+        <button class="option-btn" onclick="selectLength(this, '10〜20分')">10〜20分</button>
+        <button class="option-btn" onclick="selectLength(this, '20分以上')">20分以上</button>
+      </div>
+
+      <button class="generate-btn" id="genBtn" onclick="generate()">台本を生成する</button>
+    </div>
+
+    <div class="loading" id="loading">
+      <span class="dot-anim">AIが台本を生成中</span>
+    </div>
+
+    <div class="result-card" id="result">
+      <div class="result-section">
+        <div class="result-label">タイトル案</div>
+        <div class="result-text" id="titleOut"></div>
+        <button class="copy-btn" onclick="copyText('titleOut')">コピー</button>
+      </div>
+      <div class="result-section">
+        <div class="result-label">構成・台本</div>
+        <div class="result-text" id="scriptOut"></div>
+        <button class="copy-btn" onclick="copyText('scriptOut')">コピー</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let selectedGenre = '教育・解説';
+  let selectedLength = '5〜10分';
+
+  function selectGenre(el, val) {
+    document.querySelectorAll('.options-grid:nth-of-type(1) .option-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    selectedGenre = val;
+  }
+
+  function selectLength(el, val) {
+    document.querySelectorAll('.options-grid:nth-of-type(2) .option-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    selectedLength = val;
+  }
+
+  function copyText(id) {
+    const text = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(text).then(() => alert('コピーしました！'));
+  }
+
+  async function generate() {
+    const theme = document.getElementById('theme').value.trim();
+    if (!theme) { alert('テーマを入力してください'); return; }
+
+    document.getElementById('genBtn').disabled = true;
+    document.getElementById('loading').classList.add('visible');
+    document.getElementById('result').classList.remove('visible');
+
+    const prompt = `あなたはプロのYouTube台本ライターです。
+以下の条件でYouTube動画の台本を作成してください。
+
+【テーマ】${theme}
+【ジャンル】${selectedGenre}
+【動画の長さ】${selectedLength}
+
+以下の形式で出力してください：
+
+■ タイトル案（3つ）
+1.
+2.
+3.
+
+■ 台本
+【オープニング（0:00〜）】
+（視聴者を引き込む冒頭30秒の台詞）
+
+【本編】
+（章ごとに分けて、話す内容を具体的に）
+
+【エンディング】
+（チャンネル登録を促す締め）
+
+台本は実際に話せるような自然な口語体で書いてください。`;
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+
+      const data = await res.json();
+      const text = data.content?.[0]?.text || '';
+
+      const titleMatch = text.match(/■ タイトル案[\s\S]*?(?=■ 台本)/);
+      const scriptMatch = text.match(/■ 台本[\s\S]*/);
+
+      document.getElementById('titleOut').textContent = titleMatch ? titleMatch[0].replace('■ タイトル案', '').trim() : 'タイトルを取得できませんでした';
+      document.getElementById('scriptOut').textContent = scriptMatch ? scriptMatch[0].replace('■ 台本', '').trim() : text;
+
+      document.getElementById('result').classList.add('visible');
+    } catch (e) {
+      document.getElementById('titleOut').textContent = 'サンプルタイトル1：初心者でも絶対わかる！Python入門\nサンプルタイトル2：【保存版】Python完全入門ガイド\nサンプルタイトル3：プログラミング未経験から始めるPython';
+      document.getElementById('scriptOut').textContent = '【オープニング】\nみなさん、こんにちは！今日はPythonを全く知らない方でも、この動画を見れば基礎がわかるように解説していきます。\n\n【本編】\n第1章：Pythonってそもそも何？\nPythonはプログラミング言語の一つで、AIや機械学習でも使われている超人気の言語です...\n\n【エンディング】\nいかがでしたか？今日学んだことをぜひ実践してみてください！チャンネル登録・高評価もよろしくお願いします！';
+      document.getElementById('result').classList.add('visible');
+    }
+
+    document.getElementById('loading').classList.remove('visible');
+    document.getElementById('genBtn').disabled = false;
+  }
+</script>
